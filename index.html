@@ -8,6 +8,7 @@
 	</head>
 
 	<body>
+
 		<form class="shape-generator">
 			<h1>Shape Generator</h1>
 			<h2>Use the controls below to generate shapes.</h2>
@@ -24,7 +25,7 @@
 				</div>
 
 				<div class="radio-block green-block">
-					<input type="radio" name="colors" id="green-radio">
+					<input type="radio" name="colors" id="green-radio" checked>
 					<label for="green-radio" class="green-radio-label">Green</label>
 				</div>
 			</div>
@@ -42,13 +43,14 @@
 				</div>
 
 				<div class="radio-block circle-block">
-					<input type="radio" name="shapes" id="circle-radio">
+					<input type="radio" name="shapes" id="circle-radio" checked>
 					<label for="circle-radio" class="circle-radio-label">Circle</label>
 				</div>
 
-				<button class="generate-button">Generate</button>
-				<button class="clear-button">Clear Screen</button>
+				<button class="generate-button" id="generate-button">Generate</button>
+				<button class="clear-button" id="clear-button">Clear Screen</button>
 			</div>
+
 		</form>
 
 	</body>

@@ -1,37 +1,52 @@
+//Defining animation frame rate:
 var animate =   window.requestAnimationFrame || 
                 window.webkitRequestAnimationFrame || 
                 window.mozRequestAnimationFrame || 
                 function (callback) { window.setTimeout(callback, 1000 / 60) }; 
 
-//defining the canvas area:
+//Defining the canvas area:
 var canvas = document.createElement("canvas");
 var canvasPadding = 15;
-var canvasWidth = window.innerWidth - canvasPadding * 2;
-var canvasHeight = window.innerHeight - canvasPadding * 2;
-canvas.width = canvasWidth;
-canvas.height = canvasHeight;
+canvas.width = window.innerWidth - canvasPadding * 2;;
+canvas.height = window.innerHeight - canvasPadding * 2;
 var context = canvas.getContext('2d');
 
-//Getting the inputs from the generator form:
-var currentShape = "circle";
-var currentShapeColor = "green";
-var circRadius = 40;
-var squareWidth = 80;
-var triangleBase = 80;
+//creating an array of shapes that grows as the user generates new ones:
+var shapes = [];
 
-var circle = new Circle(canvasWidth * Math.random(), canvasHeight * 0.85); //x,y position of object's center
-var square = new Square(canvasWidth * Math.random(), canvasHeight * 0.85); //x,y position of object's top left corner
+document.getElementById("generate-button").addEventListener("click", generateNewShape);
+
+function generateNewShape() {
+	event.preventDefault();
+	//Get the user's input for generating the new shape:
+    var currentShape = 'circle';  //default
+    var currentShapeColor = 'green';  //default
+    document.getElementById('orange-radio').checked ? currentShapeColor = 'orange' : currentShapeColor = currentShapeColor;
+    document.getElementById('blue-radio').checked ? currentShapeColor = 'blue' : currentShapeColor = currentShapeColor;
+    document.getElementById('green-radio').checked ? currentShapeColor = 'green' : currentShapeColor = currentShapeColor;
+    document.getElementById('square-radio').checked ? currentShape = 'square' : currentShape = currentShape;
+    document.getElementById('triangle-radio').checked ? currentShape = 'triangle' : currentShape = currentShape;
+    document.getElementById('circle-radio').checked ? currentShape = 'circle' : currentShape = currentShape;
+    //setting other shape parameters:
+    var circRadius = 30;
+    var lineWidth = 3;
+	var squareWidth = 60;
+	var triangleBase = 60;
+	var shapeAppearsAt_X = canvas.width * Math.random();
+	var shapeAppearsAt_Y = canvas.height * 0.85;
+	(currentShape == 'circle') ? shapes.push(new Circle(shapeAppearsAt_X, shapeAppearsAt_Y, circRadius, lineWidth, currentShapeColor)) : shapes = shapes;
+	(currentShape == 'square') ? shapes.push(new Square(shapeAppearsAt_X, shapeAppearsAt_Y, squareWidth, lineWidth, currentShapeColor)) : shapes = shapes;
+}
+
 
 var render = function () {
-    context.fillStyle = "#eeeeee";
-    context.fillRect(canvasPadding, canvasPadding, canvasWidth, canvasHeight); //creating the canvas with 15px padding
-    circle.render();
-    square.render();
+    context.fillStyle = "white";
+    context.fillRect(canvasPadding, canvasPadding, canvas.width, canvas.height); //creating the canvas with 15px padding
+    for (item of shapes) { item.render() };
 };
 
 var update = function () {
-    circle.update();
-    square.update();
+    for (item of shapes) { item.update() };
 };
 
 var step = function () {
@@ -40,93 +55,87 @@ var step = function () {
     animate(step);
 };
 
+document.body.appendChild(canvas);
+animate(step);
+
+
 
 //DEFINING THE SHAPE OBJECTS AND THEIR BEHAVIOR:
 //Defining the Circle Object:
-function Circle(x, y) {
+function Circle(x, y, radius, lineWidth_str, color) {
     this.x = x;
     this.y = y;
     this.x_speed = 0;  //vertical fall --> x_speed = 0, but we need this if we later want to add horizontal movement
     this.y_speed = -3;
+	this.render = function () {
+    	context.beginPath();
+	    context.lineWidth = lineWidth_str; //string, example: "5"
+	    context.strokeStyle = color;
+	    context.arc(this.x, this.y, radius, 2 * Math.PI, false); //x,y = center of object; 
+	    context.stroke();
+	};
+	this.update = function () {
+	    this.x += this.x_speed;
+	    this.y += this.y_speed;
+	    //defining the top left corner of the object:
+	    var topLeftX = this.x - radius;
+	    var topLeftY = this.y - radius;
+	    //defining the bottom right corner of the object:
+	    var bottomRightX = this.x + radius;
+	    var bottomRightY = this.y + radius;
+
+	    if (topLeftY < canvasPadding) {
+	        this.y = radius + canvasPadding;
+	        this.y_speed = 0;
+	    }
+	    //Handle hitting the horizontal borders
+	    if (topLeftX <= canvasPadding) {
+	        this.x = radius;
+	        this.x_speed = 0;
+	    } else if (bottomRightX > canvas.width + canvasPadding) {  //only one "padding", b/c we don't need the right padding
+	        this.x = canvas.width + canvasPadding - radius;
+	        this.x_speed = 0;
+	    }
+	};
 }
 
-Circle.prototype.render = function () {
-    context.beginPath();
-    context.lineWidth="5";
-    context.strokeStyle=currentShapeColor;
-    context.arc(this.x, this.y, circRadius, 2 * Math.PI, false); //x,y = center of object; 
-    context.stroke();
-};
-
-//Defining the circle's behavior (different from other shapes)
-Circle.prototype.update = function () {
-    this.x += this.x_speed;
-    this.y += this.y_speed;
-    //defining the top left corner of the object:
-    var topLeftX = this.x - circRadius;
-    var topLeftY = this.y - circRadius;
-    //defining the bottom right corner of the object:
-    var bottomRightX = this.x + circRadius;
-    var bottomRightY = this.y + circRadius;
-
-    if (topLeftY < canvasPadding) {
-        this.y = circRadius + canvasPadding;
-        this.y_speed = 0;
-    }
-
-    //Handle hitting the horizontal borders
-    if (topLeftX <= canvasPadding) {
-        this.x = circRadius;
-        this.x_speed = 0;
-    } else if (bottomRightX > canvasWidth + canvasPadding) {  //only one "padding", b/c we don't need the right padding
-        this.x = canvasWidth + canvasPadding - circRadius;
-        this.x_speed = 0;
-    }
-};
-
 //Defining the Square Object:
-function Square(x, y) {
+function Square(x, y, squareWidth, lineWidth_str, color) {
     this.x = x - squareWidth / 2; //for a square, x, y is the top left corner (unlike circle), so need to adjust
     this.y = y - squareWidth / 2;
     this.x_speed = 0;  //vertical fall --> x_speed = 0, but we need this if we later want to add horizontal movement
     this.y_speed = -3;
+
+    this.render = function () {
+	    context.beginPath();
+	    context.lineWidth = lineWidth_str; //string, example: "5"
+	    context.strokeStyle = color;
+	    context.rect(this.x, this.y,squareWidth,squareWidth, false); //x,y = top left corner of object; 
+	    context.stroke();
+	};
+	this.update = function () {
+	    this.x += this.x_speed;
+	    this.y += this.y_speed;
+	    //defining the top left corner of the object (for a square this is straightforward, ulike circle)
+	    var topLeftX = this.x;
+	    var topLeftY = this.y;
+	    //defining the bottom right corner of the object:
+	    var bottomRightX = this.x + squareWidth;
+	    var bottomRightY = this.y + squareWidth;
+
+	    if (topLeftY <= canvasPadding) {
+	        this.y = canvasPadding;
+	        this.y_speed = 0;
+	    }
+
+	    //Handle hitting the horizontal borders
+	    if (topLeftX < canvasPadding) {
+	        this.x = squareWidth / 2;
+	        this.x_speed = 0;
+	    } else if (bottomRightX > canvas.width + canvasPadding) {  //only one "padding", b/c we don't need the right padding
+	        this.x = canvas.width + canvasPadding - squareWidth / 2;
+	        this.x_speed = 0;
+	    }
+	};
 }
 
-Square.prototype.render = function () {
-    context.beginPath();
-    context.lineWidth="5";
-    context.strokeStyle="blue";
-    context.rect(this.x, this.y,squareWidth,squareWidth, false); //x,y = top left corner of object; 
-    context.stroke();
-};
-
-//Defining the square's behavior (different from other shapes):
-Square.prototype.update = function () {
-    this.x += this.x_speed;
-    this.y += this.y_speed;
-    //defining the top left corner of the object (for a square this is straightforward, ulike circle)
-    var topLeftX = this.x;
-    var topLeftY = this.y;
-    //defining the bottom right corner of the object:
-    var bottomRightX = this.x + squareWidth;
-    var bottomRightY = this.y + squareWidth;
-
-    if (topLeftY <= canvasPadding) {
-        this.y = canvasPadding;
-        this.y_speed = 0;
-    }
-
-    //Handle hitting the horizontal borders
-    if (topLeftX < canvasPadding) {
-        this.x = squareWidth / 2;
-        this.x_speed = 0;
-    } else if (bottomRightX > canvasWidth + canvasPadding) {  //only one "padding", b/c we don't need the right padding
-        this.x = canvasWidth + canvasPadding - squareWidth / 2;
-        this.x_speed = 0;
-    }
-};
-
-
-
-document.body.appendChild(canvas);
-animate(step);
