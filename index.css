@@ -1,0 +1,92 @@
+* {
+	font-family: 'Roboto', serif;
+	font-size: 13px;
+	font-weight: normal;
+}
+
+h1 {
+	font-size: 20px;
+}
+
+h2 {
+	font-size: 13px;
+}
+
+h3 {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.shape-generator {
+	width: 325px;
+	position: fixed;
+	bottom: 30px;
+	left: 50px;
+}
+
+.radio-block {
+	display: inline-block;
+	width: 30%;
+}
+
+/*The following three blocks are the only way I could think of to get black borders on the radio buttons, per the PSD file*/
+input {
+	vertical-align: middle;
+	margin: 0 5px 0 0;
+}
+
+input[type='radio']:after {
+    width: 10px;
+    height: 10px;
+    border-radius: 15px;
+    background-color: white;
+    content: '';
+    display: inline-block;
+    border: 1px solid black;
+}
+
+input[type='radio']:checked:after {
+    width: 10px;
+    height: 10px;
+    border-radius: 15px;
+    background-color: rgba(0,0,0,0);  /*last 0 is opacity*/
+    opacity: 0.9;
+    content: '';
+    display: inline-block;
+    border: 1px solid black;
+}
+
+label {
+	vertical-align: middle;
+}
+
+.orange-radio-label {
+	color: orange;
+}
+
+.blue-radio-label {
+	color: blue;
+}
+
+.green-radio-label {
+	color: green;
+}
+
+.generate-button, .clear-button {
+	margin-top: 20px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	padding-left: 20px;
+	padding-right: 20px;
+	border: 1px solid black;
+}
+
+.generate-button {
+	color: white;
+	background-color: black;
+}
+
+.clear-button {
+	color: black;
+	background-color: white;
+}

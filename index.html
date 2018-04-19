@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	    <link rel="stylesheet" type="text/css" href="index.css">
+	    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	    <title>Shape Generator</title>
+	</head>
+
+	<body>
+		<form class="shape-generator">
+			<h1>Shape Generator</h1>
+			<h2>Use the controls below to generate shapes.</h2>
+			<div class="color-selector">
+				<h3>Select color:</h3>
+				<div class="radio-block orange-block">
+					<input type="radio" name="colors" id="orange-radio">
+					<label for="orange-radio" class="orange-radio-label">Orange</label>
+				</div>
+
+				<div class="radio-block blue-block">
+					<input type="radio" name="colors" id="blue-radio">
+					<label for="blue-radio" class="blue-radio-label">Blue</label>
+				</div>
+
+				<div class="radio-block green-block">
+					<input type="radio" name="colors" id="green-radio">
+					<label for="green-radio" class="green-radio-label">Green</label>
+				</div>
+			</div>
+
+			<div class="shape-selector">
+				<h3>Select shape:</h3>
+				<div class="radio-block square-block">
+					<input type="radio" name="shapes" id="square-radio">
+					<label for="square-radio" class="square-radio-label">Square</label>
+				</div>
+
+				<div class="radio-block triangle-block">
+					<input type="radio" name="shapes" id="triangle-radio">
+					<label for="triangle-radio" class="triangle-radio-label">Triangle</label>
+				</div>
+
+				<div class="radio-block circle-block">
+					<input type="radio" name="shapes" id="circle-radio">
+					<label for="circle-radio" class="circle-radio-label">Circle</label>
+				</div>
+
+				<button class="generate-button">Generate</button>
+				<button class="clear-button">Clear Screen</button>
+			</div>
+		</form>
+
+	</body>
+	<script src="index.js"></script>
+</html>
