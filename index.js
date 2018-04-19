@@ -95,9 +95,9 @@ function Circle(x, y, radius, lineWidth_str, color) {
 	    }
 	    //Handle hitting the vertical borders
 	    if (topLeftX <= canvasPadding) {
-	        this.x = radius * 2 + parseInt(lineWidth_str);
+	        this.x = radius * 2 + parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
-	    } else if (bottomRightX >= canvas.width + canvasPadding) {  //only one "padding", b/c we don't need the right padding
+	    } else if (bottomRightX >= canvas.width - parseInt(lineWidth_str) * 2 ) {  //only one "padding", b/c we don't need the right padding
 	        this.x = canvas.width - radius * 2 - parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
 	    }
@@ -134,9 +134,9 @@ function Square(x, y, squareWidth, lineWidth_str, color) {
 	    }
 	    //Handle hitting the vertical borders
 	    if (topLeftX <= canvasPadding) {
-	        this.x = canvasPadding + parseInt(lineWidth_str);
+	        this.x = canvasPadding + parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
-	    } else if (bottomRightX >= canvas.width + canvasPadding) {  //only one "padding", b/c we don't need the right padding
+	    } else if (bottomRightX >= canvas.width - parseInt(lineWidth_str) * 2 ) {  //only one "padding", b/c we don't need the right padding
 	        this.x = canvas.width - squareWidth - parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
 	    }
@@ -175,9 +175,9 @@ function Triangle(x, y, triangleBase, lineWidth_str, color) {
 	    }
 	    //Handle hitting the vertical borders
 	    if (topLeftX <= canvasPadding) {
-	        this.x = canvasPadding + parseInt(lineWidth_str);
+	        this.x = canvasPadding + parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
-	    } else if (bottomRightX >= canvas.width) {  
+	    } else if (bottomRightX >= canvas.width - parseInt(lineWidth_str) * 2 ) {  
 	        this.x = canvas.width - triangleBase - parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
 	    }
