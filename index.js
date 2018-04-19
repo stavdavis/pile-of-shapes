@@ -98,7 +98,7 @@ function Circle(x, y, radius, lineWidth_str, color) {
 	        this.x = radius * 2 + parseInt(lineWidth_str);
 	        this.x_speed = 0;
 	    } else if (bottomRightX >= canvas.width + canvasPadding) {  //only one "padding", b/c we don't need the right padding
-	        this.x = canvas.width + canvasPadding - radius * 2 - parseInt(lineWidth_str) * 2;
+	        this.x = canvas.width - radius * 2 - parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
 	    }
 	};
