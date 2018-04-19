@@ -34,11 +34,15 @@ function generateNewShape() {
 	var triangleBase = 60;
 	var shapeAppearsAt_X = canvas.width * Math.random();
 	var shapeAppearsAt_Y = canvas.height * 0.85;
+	//Creating new shape objects, based on user's selection:
 	(currentShape == 'circle') ? shapes.push(new Circle(shapeAppearsAt_X, shapeAppearsAt_Y, circRadius, lineWidth, currentShapeColor)) : shapes = shapes;
 	(currentShape == 'square') ? shapes.push(new Square(shapeAppearsAt_X, shapeAppearsAt_Y, squareWidth, lineWidth, currentShapeColor)) : shapes = shapes;
+	(currentShape == 'triangle') ? shapes.push(new Triangle(shapeAppearsAt_X, shapeAppearsAt_Y, triangleBase, lineWidth, currentShapeColor)) : shapes = shapes;
 }
 
-
+//Defining the render and update functions for the animation. 
+//"render" and "update" create the newly genrated images in their initial location on the canvas and updates them for each new frame
+//They each use the methods defined inside the shape objects below
 var render = function () {
     context.fillStyle = "white";
     context.fillRect(canvasPadding, canvasPadding, canvas.width, canvas.height); //creating the canvas with 15px padding
@@ -49,6 +53,7 @@ var update = function () {
     for (item of shapes) { item.update() };
 };
 
+//"step" is a function that calls itslef for conintues rendering of the next frame of the animation. It is used by "animate" below
 var step = function () {
     update();
     render();
@@ -84,16 +89,16 @@ function Circle(x, y, radius, lineWidth_str, color) {
 	    var bottomRightX = this.x + radius;
 	    var bottomRightY = this.y + radius;
 
-	    if (topLeftY < canvasPadding) {
-	        this.y = radius + canvasPadding;
+	    if (topLeftY <= canvasPadding) {
+	        this.y = radius + canvasPadding + parseInt(lineWidth_str);
 	        this.y_speed = 0;
 	    }
-	    //Handle hitting the horizontal borders
+	    //Handle hitting the vertical borders
 	    if (topLeftX <= canvasPadding) {
-	        this.x = radius;
+	        this.x = radius * 2 + parseInt(lineWidth_str);
 	        this.x_speed = 0;
-	    } else if (bottomRightX > canvas.width + canvasPadding) {  //only one "padding", b/c we don't need the right padding
-	        this.x = canvas.width + canvasPadding - radius;
+	    } else if (bottomRightX >= canvas.width + canvasPadding) {  //only one "padding", b/c we don't need the right padding
+	        this.x = canvas.width + canvasPadding - radius * 2 - parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
 	    }
 	};
@@ -124,18 +129,57 @@ function Square(x, y, squareWidth, lineWidth_str, color) {
 	    var bottomRightY = this.y + squareWidth;
 
 	    if (topLeftY <= canvasPadding) {
-	        this.y = canvasPadding;
+	        this.y = canvasPadding + parseInt(lineWidth_str);
 	        this.y_speed = 0;
 	    }
-
-	    //Handle hitting the horizontal borders
-	    if (topLeftX < canvasPadding) {
-	        this.x = squareWidth / 2;
+	    //Handle hitting the vertical borders
+	    if (topLeftX <= canvasPadding) {
+	        this.x = canvasPadding + parseInt(lineWidth_str);
 	        this.x_speed = 0;
-	    } else if (bottomRightX > canvas.width + canvasPadding) {  //only one "padding", b/c we don't need the right padding
-	        this.x = canvas.width + canvasPadding - squareWidth / 2;
+	    } else if (bottomRightX >= canvas.width + canvasPadding) {  //only one "padding", b/c we don't need the right padding
+	        this.x = canvas.width - squareWidth - parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
 	    }
 	};
 }
 
+//Defining the Triangle Object:
+function Triangle(x, y, triangleBase, lineWidth_str, color) {
+    this.x = x; //for a triangle, x, y is the top left corner (unlike circle), so need to adjust
+    this.y = y;
+    this.x_speed = 0;  //vertical fall --> x_speed = 0, but we need this if we later want to add horizontal movement
+    this.y_speed = -3;
+    this.render = function () {
+    	context.beginPath();
+    	context.lineWidth = lineWidth_str; //string, example: "5"
+	    context.strokeStyle = color;
+		context.moveTo(this.x, this.y);
+		context.lineTo(this.x + triangleBase, this.y);
+		context.lineTo(this.x + triangleBase / 2, this.y + (triangleBase / 2) * (3 ** (1/2)));
+		context.closePath();
+	    context.stroke();
+	};
+	this.update = function () {
+	    this.x += this.x_speed;
+	    this.y += this.y_speed;
+	    //defining the top left corner of the object (for a square this is straightforward, unlike circle)
+	    var topLeftX = this.x;
+	    var topLeftY = this.y;
+	    //defining the bottom right corner of the object:
+	    var bottomRightX = this.x + triangleBase;
+	    var bottomRightY = this.y + (triangleBase / 2) * (3 ** (1/2));
+
+	    if (topLeftY <= canvasPadding) {
+	        this.y = canvasPadding + parseInt(lineWidth_str);
+	        this.y_speed = 0;
+	    }
+	    //Handle hitting the vertical borders
+	    if (topLeftX <= canvasPadding) {
+	        this.x = canvasPadding + parseInt(lineWidth_str);
+	        this.x_speed = 0;
+	    } else if (bottomRightX >= canvas.width) {  
+	        this.x = canvas.width - triangleBase - parseInt(lineWidth_str) * 2;
+	        this.x_speed = 0;
+	    }
+	};
+}
