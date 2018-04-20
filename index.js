@@ -35,7 +35,7 @@ function generateNewShape() {
 	var triangleBase = maxShapeWidth;
 	var shapeAppearsAt_X = (canvas.width - 2 * maxShapeWidth) * Math.random() + maxShapeWidth;
 	var shapeAppearsAt_Y = canvas.height * 0.85;
-	//Creating new shape objects, based on user's selection:
+	//Creating new shape objects, based on user's selection, and adding them to the array of existing shapes:
 	(currentShape == 'circle') ? shapes.push(new Circle(shapeAppearsAt_X, shapeAppearsAt_Y, circRadius, lineWidth, currentShapeColor)) : shapes = shapes;
 	(currentShape == 'square') ? shapes.push(new Square(shapeAppearsAt_X, shapeAppearsAt_Y, squareWidth, lineWidth, currentShapeColor)) : shapes = shapes;
 	(currentShape == 'triangle') ? shapes.push(new Triangle(shapeAppearsAt_X, shapeAppearsAt_Y, triangleBase, lineWidth, currentShapeColor)) : shapes = shapes;
@@ -46,7 +46,7 @@ function generateNewShape() {
 //They each use the methods defined inside the shape objects below
 var render = function () {
     context.fillStyle = "white";
-    context.fillRect(canvasPadding, canvasPadding, canvas.width, canvas.height); //creating the canvas with 15px padding
+    context.fillRect(canvasPadding, canvasPadding, canvas.width, canvas.height); //creating the canvas with border padding
     for (item of shapes) { item.render() };
 };
 
@@ -67,12 +67,13 @@ animate(step);
 
 
 //DEFINING THE SHAPE OBJECTS AND THEIR BEHAVIOR:
-//Defining the Circle Object:
+//Defining the Circle Object and its behavior:
 function Circle(x, y, radius, borderWidth, color) {
     this.x = x;
     this.y = y;
     this.x_speed = 0;  //vertical fall --> x_speed = 0, but we need this if we later want to add horizontal movement
     this.y_speed = -3;
+
 	this.render = function () {
     	context.beginPath();
 	    context.lineWidth = borderWidth; //string, example: "5"
@@ -80,6 +81,7 @@ function Circle(x, y, radius, borderWidth, color) {
 	    context.arc(this.x, this.y, radius, 2 * Math.PI, false); //x,y = center of object; 
 	    context.stroke();
 	};
+
 	this.update = function () {
 	    this.x += this.x_speed;
 	    this.y += this.y_speed;
@@ -89,7 +91,6 @@ function Circle(x, y, radius, borderWidth, color) {
 	    //defining the bottom right corner of the object:
 	    var bottomRightX = this.x + radius;
 	    var bottomRightY = this.y + radius;
-
 	    if (topLeftY <= canvasPadding) {
 	        this.y = radius + canvasPadding + borderWidth;
 	        this.y_speed = 0;
@@ -124,6 +125,7 @@ function Square(x, y, squareWidth, borderWidth, color) {
 	    context.rect(this.x, this.y,squareWidth,squareWidth, false); //x,y = top left corner of object; 
 	    context.stroke();
 	};
+
 	this.update = function () {
 	    this.x += this.x_speed;
 	    this.y += this.y_speed;
@@ -162,6 +164,7 @@ function Triangle(x, y, triangleBase, borderWidth, color) {
     this.y = y;
     this.x_speed = 0;  //vertical fall --> x_speed = 0, but we need this if we later want to add horizontal movement
     this.y_speed = -3;
+    
     this.render = function () {
     	context.beginPath();
     	context.lineWidth = borderWidth; //string, example: "5"
@@ -172,6 +175,7 @@ function Triangle(x, y, triangleBase, borderWidth, color) {
 		context.closePath();
 	    context.stroke();
 	};
+	
 	this.update = function () {
 	    this.x += this.x_speed;
 	    this.y += this.y_speed;
