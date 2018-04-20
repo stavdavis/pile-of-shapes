@@ -28,11 +28,12 @@ function generateNewShape() {
     document.getElementById('triangle-radio').checked ? currentShape = 'triangle' : currentShape = currentShape;
     document.getElementById('circle-radio').checked ? currentShape = 'circle' : currentShape = currentShape;
     //setting other shape parameters:
-    var circRadius = 30;
+    var maxShapeWidth = 60;
     var lineWidth = 3;
-	var squareWidth = 60;
-	var triangleBase = 60;
-	var shapeAppearsAt_X = canvas.width * 0.8 * Math.random() + canvas.width * 0.1;
+    var circRadius = maxShapeWidth / 2;
+	var squareWidth = maxShapeWidth;
+	var triangleBase = maxShapeWidth;
+	var shapeAppearsAt_X = (canvas.width - 2 * maxShapeWidth) * Math.random() + maxShapeWidth;
 	var shapeAppearsAt_Y = canvas.height * 0.85;
 	//Creating new shape objects, based on user's selection:
 	(currentShape == 'circle') ? shapes.push(new Circle(shapeAppearsAt_X, shapeAppearsAt_Y, circRadius, lineWidth, currentShapeColor)) : shapes = shapes;
