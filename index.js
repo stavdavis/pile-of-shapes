@@ -68,14 +68,14 @@ animate(step);
 
 //DEFINING THE SHAPE OBJECTS AND THEIR BEHAVIOR:
 //Defining the Circle Object:
-function Circle(x, y, radius, lineWidth_str, color) {
+function Circle(x, y, radius, borderWidth, color) {
     this.x = x;
     this.y = y;
     this.x_speed = 0;  //vertical fall --> x_speed = 0, but we need this if we later want to add horizontal movement
     this.y_speed = -3;
 	this.render = function () {
     	context.beginPath();
-	    context.lineWidth = lineWidth_str; //string, example: "5"
+	    context.lineWidth = borderWidth; //string, example: "5"
 	    context.strokeStyle = color;
 	    context.arc(this.x, this.y, radius, 2 * Math.PI, false); //x,y = center of object; 
 	    context.stroke();
@@ -91,18 +91,18 @@ function Circle(x, y, radius, lineWidth_str, color) {
 	    var bottomRightY = this.y + radius;
 
 	    if (topLeftY <= canvasPadding) {
-	        this.y = radius + canvasPadding + parseInt(lineWidth_str);
+	        this.y = radius + canvasPadding + borderWidth;
 	        this.y_speed = 0;
 	    }
 	    //Handle hitting the vertical borders
 	    if (topLeftX <= canvasPadding) {
-	        this.x = radius * 2 + parseInt(lineWidth_str) * 2;
+	        this.x = radius * 2 + borderWidth * 2;
 	        this.x_speed = 0;
-	    } else if (bottomRightX >= canvas.width - parseInt(lineWidth_str) * 2 ) {  //only one "padding", b/c we don't need the right padding
-	        this.x = canvas.width - radius * 2 - parseInt(lineWidth_str) * 2;
+	    } else if (bottomRightX >= canvas.width - borderWidth * 2 ) {  //only one "padding", b/c we don't need the right padding
+	        this.x = canvas.width - radius * 2 - borderWidth * 2;
 	        this.x_speed = 0;
 	    }
-	    for (pixel of context.getImageData(topLeftX, topLeftY - parseInt(lineWidth_str), radius * 2, 1).data) {
+	    for (pixel of context.getImageData(topLeftX, topLeftY - borderWidth, radius * 2, 1).data) {
 	    	if (pixel != 255) {
 	    		this.y_speed = 0;
 	    	}
@@ -111,7 +111,7 @@ function Circle(x, y, radius, lineWidth_str, color) {
 }
 
 //Defining the Square Object:
-function Square(x, y, squareWidth, lineWidth_str, color) {
+function Square(x, y, squareWidth, borderWidth, color) {
     this.x = x - squareWidth / 2; //for a square, x, y is the top left corner (unlike circle), so need to adjust
     this.y = y - squareWidth / 2;
     this.x_speed = 0;  //vertical fall --> x_speed = 0, but we need this if we later want to add horizontal movement
@@ -119,7 +119,7 @@ function Square(x, y, squareWidth, lineWidth_str, color) {
 
     this.render = function () {
 	    context.beginPath();
-	    context.lineWidth = lineWidth_str; //string, example: "5"
+	    context.lineWidth = borderWidth; //string, example: "5"
 	    context.strokeStyle = color;
 	    context.rect(this.x, this.y,squareWidth,squareWidth, false); //x,y = top left corner of object; 
 	    context.stroke();
@@ -135,20 +135,20 @@ function Square(x, y, squareWidth, lineWidth_str, color) {
 	    var bottomRightY = this.y + squareWidth;
 
 	    if (topLeftY <= canvasPadding) {
-	        this.y = canvasPadding + parseInt(lineWidth_str);
+	        this.y = canvasPadding + borderWidth;
 	        this.y_speed = 0;
 	        console.log(this.x, this.y)
 	    }
 	    //Handle hitting the vertical borders
 	    if (topLeftX <= canvasPadding) {
-	        this.x = canvasPadding + parseInt(lineWidth_str) * 2;
+	        this.x = canvasPadding + borderWidth * 2;
 	        this.x_speed = 0;
-	    } else if (bottomRightX >= canvas.width - parseInt(lineWidth_str) * 2 ) {  //only one "padding", b/c we don't need the right padding
-	        this.x = canvas.width - squareWidth - parseInt(lineWidth_str) * 2;
+	    } else if (bottomRightX >= canvas.width - borderWidth * 2 ) {  //only one "padding", b/c we don't need the right padding
+	        this.x = canvas.width - squareWidth - borderWidth * 2;
 	        this.x_speed = 0;
 	    }
 	    //Check if there is anything in front of the moving object (look at 1-pixel line in front of the object):
-	    for (pixel of context.getImageData(topLeftX, topLeftY - parseInt(lineWidth_str), squareWidth, 1).data) {
+	    for (pixel of context.getImageData(topLeftX, topLeftY - borderWidth, squareWidth, 1).data) {
 	    	if (pixel != 255) {
 	    		this.y_speed = 0;
 	    	}
@@ -157,14 +157,14 @@ function Square(x, y, squareWidth, lineWidth_str, color) {
 }
 
 //Defining the Triangle Object:
-function Triangle(x, y, triangleBase, lineWidth_str, color) {
+function Triangle(x, y, triangleBase, borderWidth, color) {
     this.x = x; //for a triangle, x, y is the top left corner (unlike circle), so need to adjust
     this.y = y;
     this.x_speed = 0;  //vertical fall --> x_speed = 0, but we need this if we later want to add horizontal movement
     this.y_speed = -3;
     this.render = function () {
     	context.beginPath();
-    	context.lineWidth = lineWidth_str; //string, example: "5"
+    	context.lineWidth = borderWidth; //string, example: "5"
 	    context.strokeStyle = color;
 		context.moveTo(this.x, this.y);
 		context.lineTo(this.x + triangleBase, this.y);
@@ -182,19 +182,19 @@ function Triangle(x, y, triangleBase, lineWidth_str, color) {
 	    var bottomRightX = this.x + triangleBase;
 	    var bottomRightY = this.y + (triangleBase / 2) * (3 ** (1/2));
 	    if (topLeftY <= canvasPadding) {
-	        this.y = canvasPadding + parseInt(lineWidth_str);
+	        this.y = canvasPadding + borderWidth;
 	        this.y_speed = 0;
 	    }
 	    //Handle hitting the vertical borders
 	    if (topLeftX <= canvasPadding) {
-	        this.x = canvasPadding + parseInt(lineWidth_str) * 2;
+	        this.x = canvasPadding + borderWidth * 2;
 	        this.x_speed = 0;
-	    } else if (bottomRightX >= canvas.width - parseInt(lineWidth_str) * 2 ) {  
-	        this.x = canvas.width - triangleBase - parseInt(lineWidth_str) * 2;
+	    } else if (bottomRightX >= canvas.width - borderWidth * 2 ) {  
+	        this.x = canvas.width - triangleBase - borderWidth * 2;
 	        this.x_speed = 0;
 	    }
 	   	//Check if there is anything in front of the moving object (look at 1-pixel line in front of the object):
-	    for (pixel of context.getImageData(topLeftX, topLeftY - parseInt(lineWidth_str), triangleBase, 1).data) {
+	    for (pixel of context.getImageData(topLeftX, topLeftY - borderWidth, triangleBase, 1).data) {
 	    	if (pixel != 255) {
 	    		this.y_speed = 0;
 	    	}
