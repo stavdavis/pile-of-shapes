@@ -131,6 +131,7 @@ function Square(x, y, squareWidth, lineWidth_str, color) {
 	    if (topLeftY <= canvasPadding) {
 	        this.y = canvasPadding + parseInt(lineWidth_str);
 	        this.y_speed = 0;
+	        console.log(this.x, this.y)
 	    }
 	    //Handle hitting the vertical borders
 	    if (topLeftX <= canvasPadding) {
