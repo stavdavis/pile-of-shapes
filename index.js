@@ -32,7 +32,7 @@ function generateNewShape() {
     var lineWidth = 3;
 	var squareWidth = 60;
 	var triangleBase = 60;
-	var shapeAppearsAt_X = canvas.width * Math.random();
+	var shapeAppearsAt_X = canvas.width * 0.8 * Math.random() + canvas.width * 0.1;
 	var shapeAppearsAt_Y = canvas.height * 0.85;
 	//Creating new shape objects, based on user's selection:
 	(currentShape == 'circle') ? shapes.push(new Circle(shapeAppearsAt_X, shapeAppearsAt_Y, circRadius, lineWidth, currentShapeColor)) : shapes = shapes;
@@ -101,6 +101,11 @@ function Circle(x, y, radius, lineWidth_str, color) {
 	        this.x = canvas.width - radius * 2 - parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
 	    }
+	    for (pixel of context.getImageData(topLeftX, topLeftY - parseInt(lineWidth_str), radius * 2, 1).data) {
+	    	if (pixel != 255) {
+	    		this.y_speed = 0;
+	    	}
+	    }
 	};
 }
 
@@ -141,6 +146,12 @@ function Square(x, y, squareWidth, lineWidth_str, color) {
 	        this.x = canvas.width - squareWidth - parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
 	    }
+	    //Check if there is anything in front of the moving object (look at 1-pixel line in front of the object):
+	    for (pixel of context.getImageData(topLeftX, topLeftY - parseInt(lineWidth_str), squareWidth, 1).data) {
+	    	if (pixel != 255) {
+	    		this.y_speed = 0;
+	    	}
+	    }
 	};
 }
 
@@ -169,7 +180,6 @@ function Triangle(x, y, triangleBase, lineWidth_str, color) {
 	    //defining the bottom right corner of the object:
 	    var bottomRightX = this.x + triangleBase;
 	    var bottomRightY = this.y + (triangleBase / 2) * (3 ** (1/2));
-
 	    if (topLeftY <= canvasPadding) {
 	        this.y = canvasPadding + parseInt(lineWidth_str);
 	        this.y_speed = 0;
@@ -181,6 +191,12 @@ function Triangle(x, y, triangleBase, lineWidth_str, color) {
 	    } else if (bottomRightX >= canvas.width - parseInt(lineWidth_str) * 2 ) {  
 	        this.x = canvas.width - triangleBase - parseInt(lineWidth_str) * 2;
 	        this.x_speed = 0;
+	    }
+	   	//Check if there is anything in front of the moving object (look at 1-pixel line in front of the object):
+	    for (pixel of context.getImageData(topLeftX, topLeftY - parseInt(lineWidth_str), triangleBase, 1).data) {
+	    	if (pixel != 255) {
+	    		this.y_speed = 0;
+	    	}
 	    }
 	};
 }
