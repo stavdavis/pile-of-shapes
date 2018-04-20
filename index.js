@@ -6,13 +6,15 @@ var animate =   window.requestAnimationFrame ||
 
 //Defining the canvas area:
 var canvas = document.createElement("canvas");
-var canvasPadding = 15;
+var canvasPadding = 0;
 canvas.width = window.innerWidth - canvasPadding * 2;;
 canvas.height = window.innerHeight - canvasPadding * 2;
 var context = canvas.getContext('2d');
 
 //creating an array of shapes that grows as the user generates new ones:
 var shapes = [];
+var shapeFallSpeed = -4;
+var shapeSlowSpeed = -0.1;
 
 document.getElementById("generate-button").addEventListener("click", generateNewShape);
 
@@ -72,7 +74,7 @@ function Circle(x, y, radius, borderWidth, color) {
     this.x = x;
     this.y = y;
     this.x_speed = 0;  //vertical fall --> x_speed = 0, but we need this if we later want to add horizontal movement
-    this.y_speed = -3;
+    this.y_speed = shapeFallSpeed;
 
 	this.render = function () {
     	context.beginPath();
@@ -92,8 +94,8 @@ function Circle(x, y, radius, borderWidth, color) {
 	    var bottomRightX = this.x + radius;
 	    var bottomRightY = this.y + radius;
 	    if (topLeftY <= canvasPadding) {
-	        this.y = radius + canvasPadding + borderWidth;
-	        this.y_speed = 0;
+	        // this.y = radius + canvasPadding + borderWidth; //uncomment this to make the shapes stop at the top
+	        this.y_speed = shapeSlowSpeed;
 	    }
 	    //Handle hitting the vertical borders
 	    if (topLeftX <= canvasPadding) {
@@ -103,20 +105,23 @@ function Circle(x, y, radius, borderWidth, color) {
 	        this.x = canvas.width - radius * 2 - borderWidth * 2;
 	        this.x_speed = 0;
 	    }
+	    //Check if there is anything in front of the moving object (look at 1-pixel line in front of the object):
 	    for (pixel of context.getImageData(topLeftX, topLeftY - borderWidth, radius * 2, 1).data) {
 	    	if (pixel != 255) {
-	    		this.y_speed = 0;
+	    		this.y_speed = shapeSlowSpeed;
 	    	}
 	    }
 	};
 }
+
+
 
 //Defining the Square Object:
 function Square(x, y, squareWidth, borderWidth, color) {
     this.x = x - squareWidth / 2; //for a square, x, y is the top left corner (unlike circle), so need to adjust
     this.y = y - squareWidth / 2;
     this.x_speed = 0;  //vertical fall --> x_speed = 0, but we need this if we later want to add horizontal movement
-    this.y_speed = -3;
+    this.y_speed = shapeFallSpeed;
 
     this.render = function () {
 	    context.beginPath();
@@ -137,9 +142,8 @@ function Square(x, y, squareWidth, borderWidth, color) {
 	    var bottomRightY = this.y + squareWidth;
 
 	    if (topLeftY <= canvasPadding) {
-	        this.y = canvasPadding + borderWidth;
-	        this.y_speed = 0;
-	        console.log(this.x, this.y)
+	        // this.y = canvasPadding + borderWidth; //uncomment this to make the shapes stop at the top
+	        this.y_speed = shapeSlowSpeed;
 	    }
 	    //Handle hitting the vertical borders
 	    if (topLeftX <= canvasPadding) {
@@ -152,7 +156,7 @@ function Square(x, y, squareWidth, borderWidth, color) {
 	    //Check if there is anything in front of the moving object (look at 1-pixel line in front of the object):
 	    for (pixel of context.getImageData(topLeftX, topLeftY - borderWidth, squareWidth, 1).data) {
 	    	if (pixel != 255) {
-	    		this.y_speed = 0;
+	    		this.y_speed = shapeSlowSpeed;
 	    	}
 	    }
 	};
@@ -163,7 +167,7 @@ function Triangle(x, y, triangleBase, borderWidth, color) {
     this.x = x; //for a triangle, x, y is the top left corner (unlike circle), so need to adjust
     this.y = y;
     this.x_speed = 0;  //vertical fall --> x_speed = 0, but we need this if we later want to add horizontal movement
-    this.y_speed = -3;
+    this.y_speed = shapeFallSpeed;
     
     this.render = function () {
     	context.beginPath();
@@ -186,8 +190,8 @@ function Triangle(x, y, triangleBase, borderWidth, color) {
 	    var bottomRightX = this.x + triangleBase;
 	    var bottomRightY = this.y + (triangleBase / 2) * (3 ** (1/2));
 	    if (topLeftY <= canvasPadding) {
-	        this.y = canvasPadding + borderWidth;
-	        this.y_speed = 0;
+	        // this.y = canvasPadding + borderWidth; //uncomment this to make the shapes stop at the top
+	        this.y_speed = shapeSlowSpeed;
 	    }
 	    //Handle hitting the vertical borders
 	    if (topLeftX <= canvasPadding) {
@@ -200,7 +204,7 @@ function Triangle(x, y, triangleBase, borderWidth, color) {
 	   	//Check if there is anything in front of the moving object (look at 1-pixel line in front of the object):
 	    for (pixel of context.getImageData(topLeftX, topLeftY - borderWidth, triangleBase, 1).data) {
 	    	if (pixel != 255) {
-	    		this.y_speed = 0;
+	    		this.y_speed = shapeSlowSpeed;
 	    	}
 	    }
 	};
